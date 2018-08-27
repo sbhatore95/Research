@@ -19,20 +19,25 @@ def get_wordnet_pos(treebank_tag):
         return wordnet.NOUN
 
 # Now we read back from new.txt to tokenize the words
-file = open("new1.txt", 'r')
+file = open("frequencies.txt", 'r')
+res = file.read().split('\n')
+dic1 = {}
+for i in res:
+    b = i.split(' ')
+    dic1[b[1]] = b[0]
+file = open("2.txt", "r")
 tokens = word_tokenize(file.read()) # Generate list of tokens
 tokens_pos = pos_tag(tokens)
 dic = {}
 for i in tokens_pos:
 	dic[i[0]] = i[1]
 
-file = open("new1.txt", 'r')
+file = open("2.txt", 'r')
 res = file.read().split('\n')
 
-file = open("lemma.txt", 'w')
+file = open("result.txt", 'w')
 for i in res:
-	if i != '' and i not in stop_words:
-		stemmer = PorterStemmer()
+	if i != '' and i not in stop_words and len(i) > 3 and not dic[i].startswith('J') and not dic[i].startswith('R'):
 		lemmatiser = WordNetLemmatizer()
 		file.write(lemmatiser.lemmatize(i, get_wordnet_pos(dic[i])))
 		file.write('\n')
